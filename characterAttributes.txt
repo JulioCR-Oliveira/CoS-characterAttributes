@@ -18,7 +18,7 @@
 *comment ################################################################################
 
 *label createingVariables
-*temp number_of_attributes 4
+*temp number_of_attributes 8
 *comment the numbers of attributes your game will have. Up tp twelve.
 
 *temp max_points (8 * number_of_attributes) 
