@@ -1,0 +1,370 @@
+*comment initialitation
+*label attributes_distribution
+*gosub variables
+*gosub random_values
+*goto stats_overview
+
+*label variables
+*temp CA_aux 0
+*temp rng 0
+*temp string_param ""
+*temp param_attribute ""
+*temp points_attribute 0
+*temp current_attributes_points 0
+
+
+*comment ################################################################################
+*comment ##################              SETTINGS              ##########################
+*comment ################################################################################
+
+*label createingVariables
+*temp number_of_attributes 4
+*comment the numbers of attributes your game will have. Up tp twelve.
+
+*temp max_points (8 * number_of_attributes) 
+*comment the amount of attributes points you will have to distribute. Recommended 8 * number of attributes.
+
+*temp min_points (6 * number_of_attributes)
+*comment the minimum amount of attributes points you will have to distribute before proceeding. 
+*comment Recommended to have a minimum margin of 4 points. Larger margin for role-playing purposes.
+
+*comment IMPORTANT!!! attribute[n]_name must be equal the variable name you will use in game and must be 
+*comment declared in startup.txt
+
+*temp attribute1_name "intelligence"
+*temp attribute2_name "agility"
+*temp attribute3_name "perception"
+*temp attribute4_name "luck"
+*temp attribute5_name "charisma"
+*temp attribute6_name "stealth"
+*temp attribute7_name "dexterity"
+*temp attribute8_name "strength"
+*temp attribute9_name "newAttribute"
+*temp attribute10_name "newAttribute"
+*temp attribute11_name "newAttribute"
+*temp attribute12_name "newAttribute"
+
+
+
+*return
+
+*comment ################################################################################
+*comment ############         ATTRIBUTES DESCRIPTION IN-GAME        #####################
+*comment ################################################################################
+
+*label attribute1_text
+Intelligence affects the ability of main character to reason and solve puzzles.
+*return
+
+*label attribute2_text
+Agility affects the ability of main character to perform physical activities, such as running, 
+climbing and dodging.
+*return
+
+*label attribute3_text
+Perception affects the ability of main character to notice little details and spot 
+hidden objects.
+*return
+
+*label attribute4_text
+Luck affects the main character luck. Often underestimated.
+*return
+
+*label attribute5_text
+Charisma affects the ability of main character to persuade others.
+*return
+
+*label attribute6_text
+Stealth affects the ability of main character to perform action without been caught.
+*return
+
+*label attribute7_text
+Stealth affects the ability of main character to perform manual labors, such as pickpocket, 
+lock picking and throwing accuracy.
+*return
+
+*label attribute8_text
+Strength affects the ability of main character to carry and lift weight.
+*return
+
+*label attribute9_text
+Add new attribute description.
+*return
+
+*label attribute10_text
+Add new attribute description.
+*return
+
+*label attribute11_text
+Add new attribute description.
+*return
+
+*label attribute12_text
+Add new attribute description.
+*return
+
+*comment ################################################################################
+*comment ############         ATTRIBUTES DISTRIBUTION SCREEN        #####################
+*comment ################################################################################
+
+*label stats_overview_text
+[b]ATTRIBUTES:[/b]
+
+*set CA_aux 1
+*label loop
+*if (CA_aux > number_of_attributes)
+	*goto breakLoop
+*gosub getAttributeName
+${string_param}: ${{string_param}}
+*line_break
+*set CA_aux + 1
+*goto loop
+
+*label breakLoop
+
+Points spent: ${current_attributes_points}
+*line_break
+You have ${max_points - current_attributes_points} points left.
+
+NOTE: Must spent at least ${min_points} points to proceed. All remaining points will be lost.
+*return
+
+*label stats_overview
+*gosub stats_overview_text
+
+*choice
+	#Set distribution randomly.
+		*gosub random_values
+		*goto stats_overview
+	#Set attributes directly.
+		*goto change_stats
+	*selectable_if (current_attributes_points >= min_points) #Finish and continue
+		*goto finish_questionnaire
+		
+*label change_stats
+*gosub stats_overview_text
+
+Select the attribute to change.
+
+You have ${max_points - current_attributes_points} points left.
+
+*choice
+	*if (number_of_attributes >= 1)
+		#${attribute1_name}
+			*set param_attribute "attribute1"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 2)
+		#${attribute2_name}
+			*set param_attribute "attribute2"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 3)
+		#${attribute3_name}
+			*set param_attribute "attribute3"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 4)
+		#${attribute4_name}
+			*set param_attribute "attribute4"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 5)
+		#${attribute5_name}
+			*set param_attribute "attribute5"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 6)
+		#${attribute6_name}
+			*set param_attribute "attribute6"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 7)
+		#${attribute7_name}
+			*set param_attribute "attribute7"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 8)
+		#${attribute8_name}
+			*set param_attribute "attribute8"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 9)
+		#${attribute9_name}
+			*set param_attribute "attribute9"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 10)
+		#${attribute10_name}
+			*set param_attribute "attribute10"
+			*goto change_attributes_points
+	*if (number_of_attributes >= 11)
+		#${attribute11_name}
+			*set param_attribute "attribute11"
+			*goto change_attributes_points
+	*if (number_of_attributes = 12)
+		#${attribute12_name}
+			*set param_attribute "attribute12"
+			*goto change_attributes_points
+	#Return
+		*goto stats_overview
+		
+*label change_attributes_points
+[b]$!!{{param_attribute&"_name"}}[/b]
+*line_break
+*gosub {param_attribute&"_text"}
+*set param_attribute {param_attribute&"_name"}
+
+Your current ${param_attribute} is ${{param_attribute}}.
+
+You have ${max_points - current_attributes_points} points left.
+
+*if {param_attribute} = 10
+	*set points_attribute 20
+	*goto endif_3
+*elseif {param_attribute} = 9
+	*set points_attribute 16
+	*goto endif_3
+*elseif {param_attribute} >= 8
+	*set points_attribute 13
+	*goto endif_3
+*elseif {param_attribute} >= 7
+	*set points_attribute 10
+	*goto endif_3
+*elseif {param_attribute} >= 6
+	*set points_attribute 8
+	*goto endif_3
+*elseif {param_attribute} >= 5
+	*set points_attribute 6
+	*goto endif_3
+*else
+	*set points_attribute {param_attribute}
+	*goto endif_3
+*label endif_3
+
+*choice
+	#Set ${param_attribute} to 1 (${points_attribute - 1} points)
+		*set {param_attribute} 1
+		*set current_attributes_points - {points_attribute - 1}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 2) or ({max_points - current_attributes_points} >= {2 - points_attribute})) #Set ${param_attribute} to 2 (${points_attribute - 2} points)
+		*set {param_attribute} 2
+		*set current_attributes_points - {points_attribute - 2}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 3) or ({max_points - current_attributes_points} >= {3 - points_attribute})) #Set ${param_attribute} to 3 (${points_attribute - 3} points)
+		*set {param_attribute} 3
+		*set current_attributes_points - {points_attribute - 3}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 4) or ({max_points - current_attributes_points} >= {4 - points_attribute})) #Set ${param_attribute} to 4 (${points_attribute - 4} points)
+		*set {param_attribute} 4
+		*set current_attributes_points - {points_attribute - 4}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 5) or ({max_points - current_attributes_points} >= {6 - points_attribute})) #Set ${param_attribute} to 5 (${points_attribute - 6} points)
+		*set {param_attribute} 5
+		*set current_attributes_points - {points_attribute - 6}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 6) or ({max_points - current_attributes_points} >= {8 - points_attribute})) #Set ${param_attribute} to 6 (${points_attribute - 8} points)
+		*set {param_attribute} 6
+		*set current_attributes_points - {points_attribute - 8}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 7) or ({max_points - current_attributes_points} >= {10 - points_attribute})) #Set ${param_attribute} to 7 (${points_attribute - 10} points)
+		*set {param_attribute} 7
+		*set current_attributes_points - {points_attribute - 10}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 8) or ({max_points - current_attributes_points} >= {13 - points_attribute})) #Set ${param_attribute} to 8 (${points_attribute - 13} points)
+		*set {param_attribute} 8
+		*set current_attributes_points - {points_attribute - 13}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 9) or ({max_points - current_attributes_points} >= {16 - points_attribute})) #Set ${param_attribute} to 9 (${points_attribute - 16} points)
+		*set {param_attribute} 9
+		*set current_attributes_points - {points_attribute - 16}
+		*goto change_stats
+	*selectable_if (({param_attribute} >= 10) or ({max_points - current_attributes_points} >= {20 - points_attribute})) #Set ${param_attribute} to 10 (${points_attribute - 20} points)
+		*set {param_attribute} 10
+		*set current_attributes_points - {points_attribute - 20}
+		*goto change_stats
+	#Cancel
+		*goto change_stats
+		
+*label finish_questionnaire
+*return
+
+*label calc_final_attribute
+*if {string_param} >= 20
+	*set {string_param} 10
+	*return
+*elseif {string_param} >= 16
+	*set {string_param} 9
+	*return
+*elseif {string_param} >= 13
+	*set {string_param} 8
+	*return
+*elseif {string_param} >= 10
+	*set {string_param} 7
+	*return
+*elseif {string_param} >= 8
+	*set {string_param} 6
+	*return
+*elseif {string_param} >= 6
+	*set {string_param} 5
+	*return
+*elseif {string_param} = 5
+	*set {string_param} 4
+	*return
+*else
+	*return
+	
+*label convert_to_acutal_value
+*if {string_param} >= 20
+	*set {string_param} 20
+	*return
+*elseif {string_param} >= 16
+	*set {string_param} 16
+	*return
+*elseif {string_param} >= 13
+	*set {string_param} 13
+	*return
+*elseif {string_param} >= 10
+	*set {string_param} 10
+	*return
+*elseif {string_param} >= 8
+	*set {string_param} 8
+	*return
+*elseif {string_param} >= 6
+	*set {string_param} 6
+	*return
+*elseif {string_param} = 5
+	*set {string_param} 5
+	*return
+*else
+	*return
+	
+
+*label calc_all_final_attributes
+*set CA_aux 1
+*label loop3
+*if (CA_aux > number_of_attributes)
+	*return	
+*gosub getAttributeName
+*gosub calc_final_attribute
+*set CA_aux + 1
+*goto loop3
+
+*label random_values
+*set current_attributes_points 0
+*set CA_aux 1
+*label loop2
+*if (CA_aux > number_of_attributes)
+	*goto breakLoop2
+	
+*gosub getAttributeName
+*rand {string_param} 1 20
+*gosub convert_to_acutal_value
+*set current_attributes_points + {string_param}
+
+*set CA_aux + 1
+*goto loop2
+
+*label breakLoop2
+*if (current_attributes_points < min_points) or (current_attributes_points > max_points)
+	*gosub random_values
+	*return
+*else
+	*gosub calc_all_final_attributes
+	*return
+*return
+
+*label getAttributeName
+*set string_param {(("attribute"&CA_aux)&"_name")}
+*return
