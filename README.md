@@ -1,2 +1,2 @@
 # CoS-characterAttributes
-Adds a screen for distribuition of your MC attributes in ChoiceScript language.
+This is a template in ChoiceScript language of a attributes distribuition screen for your main character.
