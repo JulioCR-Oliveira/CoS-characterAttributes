@@ -17,7 +17,6 @@
 *comment ##################              SETTINGS              ##########################
 *comment ################################################################################
 
-*label createingVariables
 *temp number_of_attributes 8
 *comment the numbers of attributes your game will have. Up tp twelve.
 
